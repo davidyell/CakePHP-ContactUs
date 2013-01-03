@@ -16,28 +16,26 @@ class ContactsController extends ContactUsAppController {
 
             $this->Contact->set($this->request->data);
             if($this->Contact->validates()){
+                if($this->Recaptcha->verify()){
+                    $email = new CakeEmail();
+                    $email->from($this->request->data['Contact']['email']);
+                    $email->sender(Configure::read('Site.email'));
+                    $email->to(Configure::read('Site.email'));
+                    $email->returnPath(Configure::read('Site.email'), 'Site');
+                    $email->replyTo($this->request->data['Contact']['email']);
+                    $email->emailFormat('both');
+                    $email->subject('Website enquiry');
 
-                $email = new CakeEmail();
-                $email->from($this->request->data['Contact']['email']);
-                $email->sender(Configure::read('Site.email'));
-                $email->to(Configure::read('Site.email'));
-                $email->returnPath(Configure::read('Site.email'), 'Site');
-                $email->replyTo($this->request->data['Contact']['email']);
-                $email->emailFormat('both');
-                $email->subject('Website enquiry');
-
-                if($email->send($this->request->data['Contact']['message'])){
-                    unset($this->request->data['Contact']);
-                    $this->Session->setFlash('Message has been sent', 'alert-box', array('class'=>'alert-success'));
-                    $this->redirect(array('action'=>'message'));
-                }else{
-                    $this->Session->setFlash('Message could not be sent, please try again', 'alert-box', array('class'=>'alert-error'));
+                    if($email->send($this->request->data['Contact']['message'])){
+                        unset($this->request->data['Contact']);
+                        $this->Session->setFlash('Message has been sent', 'alert-box', array('class'=>'alert-success'));
+                        $this->redirect(array('action'=>'message'));
+                    }else{
+                        $this->Session->setFlash('Message could not be sent, please try again', 'alert-box', array('class'=>'alert-error'));
+                    }
                 }
-                
             }
-            
         }
-
     }
         
 }
