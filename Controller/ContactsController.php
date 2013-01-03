@@ -14,9 +14,8 @@ class ContactsController extends ContactUsAppController {
 
         if($this->request->is('post') || $this->request->is('put')){
 
-            $this->Contact->set($this->request->data);
-            if($this->Contact->validates()){
-                if($this->Recaptcha->verify()){
+            if($this->Recaptcha->verify()){
+                if($this->Contact->save($this->request->data)){
                     $email = new CakeEmail();
                     $email->from($this->request->data['Contact']['email']);
                     $email->sender(Configure::read('Site.email'));
@@ -34,6 +33,8 @@ class ContactsController extends ContactUsAppController {
                         $this->Session->setFlash('Message could not be sent, please try again', 'alert-box', array('class'=>'alert-error'));
                     }
                 }
+            }else{
+                $this->Contact->invalidate('recaptcha_response_field', 'Please enter the words');
             }
         }
     }
