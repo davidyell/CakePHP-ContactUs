@@ -8,6 +8,8 @@ App::uses('AppController', 'Controller');
 
 class ContactsController extends ContactUsAppController {
 
+    public $components = array('Recaptcha.Recaptcha');
+
     public function message(){
 
         if($this->request->is('post') || $this->request->is('put')){
@@ -21,6 +23,7 @@ class ContactsController extends ContactUsAppController {
                 $email->to(Configure::read('Site.email'));
                 $email->returnPath(Configure::read('Site.email'), 'Site');
                 $email->replyTo($this->request->data['Contact']['email']);
+                $email->emailFormat('both');
                 $email->subject('Website enquiry');
 
                 if($email->send($this->request->data['Contact']['message'])){
