@@ -1,4 +1,9 @@
 <h1>Contact Us</h1>
 
-<?php echo $this->Form->create();?>
-<?php echo $this->Form->end('Submit');?>
+<?php
+    echo $this->Form->create();
+        echo $this->Form->input('name');
+        echo $this->Form->input('email');
+        echo $this->Form->input('message', array('type'=>'textarea'));
+    echo $this->Form->end('Submit');
+?>
