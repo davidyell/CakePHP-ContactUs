@@ -8,8 +8,8 @@ App::uses('AppModel', 'Model');
 
 class Contact extends AppModel {
     
-    public $displayField = '';
-    public $useTable = false;
+    public $displayField = 'email';
+    public $useTable = 'contacts';
     public $actsAs = array('Containable');
 
     public $validate = array(
