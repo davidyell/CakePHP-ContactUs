@@ -11,8 +11,7 @@ class ContactsController extends ContactUsAppController {
     public $components = array('Recaptcha.Recaptcha');
 
     public function message(){
-
-        if($this->request->is('post') || $this->request->is('put')){
+        if($this->request->is('post')){
             if($this->Recaptcha->verify() && $this->Contact->save($this->request->data)){
                 $email = new CakeEmail();
                 $email->from($this->request->data['Contact']['email']);
@@ -25,13 +24,13 @@ class ContactsController extends ContactUsAppController {
 
                 if($email->send($this->request->data['Contact']['message'])){
                     unset($this->request->data['Contact']);
-                    $this->Session->setFlash('Message has been sent', 'alert-box', array('class'=>'alert-success'));
+                    $this->Session->setFlash('Message has been sent', null, array('class'=>'alert-success'));
                     $this->redirect(array('action'=>'message'));
                 }else{
-                    $this->Session->setFlash('Message could not be sent, please try again', 'alert-box', array('class'=>'alert-error'));
+                    $this->Session->setFlash('Could not send message, please try again', null, array('class'=>'alert-error'));
                 }
             } else{
-            $this->Contact->invalidate('recaptcha_response_field', 'Please enter the displayed words');
+                $this->Session->setFlash('Message could not be sent, please try again', null, array('class'=>'alert-error'));
             }
         }
     }
