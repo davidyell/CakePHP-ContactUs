@@ -13,28 +13,25 @@ class ContactsController extends ContactUsAppController {
     public function message(){
 
         if($this->request->is('post') || $this->request->is('put')){
+            if($this->Recaptcha->verify() && $this->Contact->save($this->request->data)){
+                $email = new CakeEmail();
+                $email->from($this->request->data['Contact']['email']);
+                $email->sender(Configure::read('Site.email'));
+                $email->to(Configure::read('Site.email'));
+                $email->returnPath(Configure::read('Site.email'), 'Site');
+                $email->replyTo($this->request->data['Contact']['email']);
+                $email->emailFormat('both');
+                $email->subject('Website enquiry');
 
-            if($this->Recaptcha->verify()){
-                if($this->Contact->save($this->request->data)){
-                    $email = new CakeEmail();
-                    $email->from($this->request->data['Contact']['email']);
-                    $email->sender(Configure::read('Site.email'));
-                    $email->to(Configure::read('Site.email'));
-                    $email->returnPath(Configure::read('Site.email'), 'Site');
-                    $email->replyTo($this->request->data['Contact']['email']);
-                    $email->emailFormat('both');
-                    $email->subject('Website enquiry');
-
-                    if($email->send($this->request->data['Contact']['message'])){
-                        unset($this->request->data['Contact']);
-                        $this->Session->setFlash('Message has been sent', 'alert-box', array('class'=>'alert-success'));
-                        $this->redirect(array('action'=>'message'));
-                    }else{
-                        $this->Session->setFlash('Message could not be sent, please try again', 'alert-box', array('class'=>'alert-error'));
-                    }
+                if($email->send($this->request->data['Contact']['message'])){
+                    unset($this->request->data['Contact']);
+                    $this->Session->setFlash('Message has been sent', 'alert-box', array('class'=>'alert-success'));
+                    $this->redirect(array('action'=>'message'));
+                }else{
+                    $this->Session->setFlash('Message could not be sent, please try again', 'alert-box', array('class'=>'alert-error'));
                 }
-            }else{
-                $this->Contact->invalidate('recaptcha_response_field', 'Please enter the words');
+            } else{
+            $this->Contact->invalidate('recaptcha_response_field', 'Please enter the displayed words');
             }
         }
     }
