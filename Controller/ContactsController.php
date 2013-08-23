@@ -17,7 +17,7 @@ class ContactsController extends ContactUsAppController {
 		 * added for backwards compatibility
 		 */
 		if(Configure::check('Site.email')){
-			Configure::write('ContactUs.email', Configure::check('Site.email'));
+			Configure::write('ContactUs.email', Configure::read('Site.email'));
 		}
                 $email = new CakeEmail();
                 $email->from($this->request->data['Contact']['email']);
