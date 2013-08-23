@@ -27,7 +27,9 @@ class ContactsController extends ContactUsAppController {
                 $email->replyTo($this->request->data['Contact']['email']);
                 $email->emailFormat('both');
                 $email->subject('Website enquiry');
-
+		if(Configure::check('ContactUs.emailConfig')){
+			$email->config(Configure::read('ContactUs.emailConfig'));
+		}
                 if($email->send($this->request->data['Contact']['message'])){
                     unset($this->request->data['Contact']);
                     $this->Session->setFlash('Message has been sent', null, array('class'=>'alert-success'));
