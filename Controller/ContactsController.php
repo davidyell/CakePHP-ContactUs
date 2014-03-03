@@ -13,11 +13,17 @@ class ContactsController extends ContactUsAppController {
     public function message(){
         if($this->request->is('post')){
             if($this->Recaptcha->verify() && $this->Contact->save($this->request->data)){
+		/**
+		 * added for backwards compatibility
+		 */
+		if(Configure::check('Site.email')){
+			Configure::write('ContactUs.email', Configure::read('Site.email'));
+		}
                 $email = new CakeEmail();
                 $email->from($this->request->data['Contact']['email']);
-                $email->sender(Configure::read('Site.email'));
-                $email->to(Configure::read('Site.email'));
-                $email->returnPath(Configure::read('Site.email'), 'Site');
+                $email->sender(Configure::read('ContactUs.email'));
+                $email->to(Configure::read('ContactUs.email'));
+                $email->returnPath(Configure::read('ContactUs.email'), 'Site');
                 $email->replyTo($this->request->data['Contact']['email']);
                 $email->emailFormat('both');
                 $email->subject('Website enquiry');
@@ -34,5 +40,5 @@ class ContactsController extends ContactUsAppController {
             }
         }
     }
-        
+
 }
