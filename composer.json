@@ -1,6 +1,9 @@
 {
     "name": "davidyell/contact-us",
     "type": "cakephp-plugin",
+    "extra": {
+        "installer-name": "ContactUs"
+    },
     "description": "A basic contact us plugin",
     "authors": [
         {
@@ -9,6 +12,6 @@
         }
     ],
     "require": {
-        "composer/installers": "*"
+        "composer/installers": "~1.0"
     }
 }
