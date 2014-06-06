@@ -14,3 +14,7 @@ A basic implementation of a contact us form.
 1. If you wish to use an email config from your email.php file, you can tell the plugin to use it by adding this to your bootstrap `Configure::write('ContactUs.emailConfig', 'smtp')` where `smtp` is the email config
 setting found in your email.php file. You can supply a different `from email`, `subject` and many other parts of the email sent by the plugin using this feature.
 ( for more info, please visit http://book.cakephp.org/2.0/en/core-utility-libraries/email.html#basic-usage )
+
+###Composer
+https://packagist.org/packages/davidyell/contact-us  
+`composer require davidyell/contact-us 0.2.1`
